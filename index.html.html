@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#171044">
+<title>KUTTIES | Play, Learn & Win</title>
+<style>
+:root{--bg:#f4f2ff;--ink:#211b45;--purple:#6546e8;--pink:#ff5da2;--blue:#36a8ed;--yellow:#ffcb45;--green:#20b982;--card:#fff;--muted:#77738f}
+*{box-sizing:border-box}body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;background:linear-gradient(145deg,#f4f2ff,#eaf7ff);color:var(--ink)}
+header{background:linear-gradient(110deg,#24135e,#6546e8 60%,#a34be7);color:white;padding:22px max(18px,calc((100% - 1120px)/2));display:flex;align-items:center;justify-content:space-between;gap:15px;flex-wrap:wrap}
+.brand{font-size:30px;font-weight:1000;letter-spacing:2px}.tag{opacity:.9;font-size:13px}.profile-chip{background:#ffffff22;border:1px solid #ffffff55;border-radius:30px;padding:9px 14px;font-size:13px}
+main{max-width:1120px;margin:0 auto;padding:22px 16px 60px}.hero{background:linear-gradient(120deg,#ffdf76,#ff9cbd);border-radius:25px;padding:25px;margin:8px 0 22px;display:flex;align-items:center;justify-content:space-between;gap:18px;flex-wrap:wrap;box-shadow:0 12px 30px #5c3db21b}
+.hero h1{font-size:clamp(28px,5vw,44px);margin:0 0 8px}.hero p{margin:0;max-width:600px}.hero .emoji{font-size:70px}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:18px 0}.stat,.panel,.game-card,.dept-card{background:var(--card);border:1px solid #e9e5ff;border-radius:18px;padding:16px;box-shadow:0 5px 18px #33206d0a}.stat b{display:block;font-size:24px;color:var(--purple)}.stat span{font-size:12px;color:var(--muted)}
+h2{margin:26px 0 13px;font-size:22px}.games{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:14px}.game-card{cursor:pointer;transition:.18s;border-bottom:4px solid var(--accent,#6546e8)}.game-card:hover{transform:translateY(-3px);box-shadow:0 12px 25px #33206d18}.game-emoji{font-size:34px}.game-card h3{margin:8px 0 4px}.game-card p{margin:0;color:var(--muted);font-size:13px}.small{font-size:12px;color:var(--muted)}
+button{border:0;border-radius:12px;background:var(--purple);color:white;padding:11px 16px;font-weight:800;cursor:pointer;font-size:14px}button.secondary{background:#eeeaff;color:#4b36bb}button:disabled{opacity:.5;cursor:not-allowed}
+#screen{display:none}.crumb{color:var(--muted);font-size:13px;margin:10px 0 15px}.dept-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:12px}.dept-card{display:flex;align-items:center;justify-content:space-between;gap:10px}.dept-card h3{margin:0 0 4px;font-size:16px}.dept-card p{margin:0;color:var(--muted);font-size:12px}.dept-card .count{font-weight:900;color:var(--purple);white-space:nowrap}
+.quiz-top{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;align-items:center}.progress{height:9px;background:#e9e5ff;border-radius:20px;overflow:hidden;margin:15px 0}.progress>div{height:100%;background:linear-gradient(90deg,var(--pink),var(--purple));width:0;transition:.2s}.question-box{background:white;border:1px solid #e8e3ff;border-radius:22px;padding:22px;box-shadow:0 10px 28px #2a1a7010}.q-number{font-size:12px;color:var(--purple);font-weight:900}.question{font-size:22px;font-weight:850;margin:12px 0 20px}.options{display:grid;grid-template-columns:1fr 1fr;gap:10px}.option{background:#f7f5ff;color:var(--ink);border:2px solid #e8e3ff;text-align:left;min-height:55px}.option:hover:not(:disabled){border-color:var(--purple);background:#f0edff}.option.correct{background:#e2fff3;border-color:#20b982;color:#116b4d}.option.wrong{background:#fff0f2;border-color:#ff6683;color:#9a2842}.feedback{margin-top:15px;padding:13px;border-radius:12px;background:#f5f3ff;display:none;line-height:1.5}.quiz-actions{display:flex;justify-content:space-between;gap:10px;margin-top:15px;flex-wrap:wrap}.hide{display:none!important}.result{text-align:center;padding:30px}.result .big{font-size:54px}.result h2{margin:8px}.result p{color:var(--muted)}.form-wrap{max-width:480px;margin:45px auto;background:white;border-radius:24px;padding:25px;box-shadow:0 15px 40px #30206c18}.form-wrap h1{margin-top:0}.field{display:block;margin:13px 0}.field span{display:block;font-size:13px;font-weight:800;margin-bottom:6px}.field input,.field select{width:100%;padding:12px;border:1px solid #dcd6fa;border-radius:10px;font:inherit}.form-wrap button{width:100%;margin-top:8px}.notice{font-size:12px;color:var(--muted);line-height:1.5;margin-top:13px}
+footer{text-align:center;color:var(--muted);font-size:12px;padding:24px}
+@media(max-width:620px){.stats{grid-template-columns:repeat(3,1fr)}.stat{padding:12px}.stat b{font-size:19px}.options{grid-template-columns:1fr}.question{font-size:19px}.hero .emoji{font-size:48px}}
+</style>
+</head>
+<body>
+<header>
+ <div><div class="brand">🚀 KUTTIES</div><div class="tag">PLAY • LEARN • THINK • WIN</div></div>
+ <div class="profile-chip" id="profileChip">Welcome, learner!</div>
+</header>
+<main>
+ <section id="profileScreen" class="form-wrap">
+  <h1>🎮 Welcome to KUTTIES!</h1><p>Make your learner profile to begin your adventure.</p>
+  <label class="field"><span>Your name or nickname</span><input id="studentName" maxlength="24" placeholder="Enter your name"></label>
+  <label class="field"><span>Age</span><input id="studentAge" type="number" min="5" max="19" placeholder="Your age"></label>
+  <label class="field"><span>Standard</span><select id="studentClass"><option value="">Choose your standard</option><option>1st</option><option>2nd</option><option>3rd</option><option>4th</option><option>5th</option><option>6th</option><option>7th</option><option>8th</option><option>9th</option><option>10th</option><option>11th</option><option>12th</option></select></label>
+  <button id="saveProfile">Start my adventure →</button>
+  <div class="notice">Your profile is stored only in this browser on this device. Do not enter private information.</div>
+ </section>
+ <section id="homeScreen" class="hide">
+  <div class="hero"><div><h1>Welcome to KUTTIES! 🌟</h1><p>Choose a game, explore its departments, answer questions and collect XP. Every question is a new chance to learn!</p></div><div class="emoji">🏆</div></div>
+  <div class="stats">
+   <div class="stat"><b id="xpStat">0</b><span>⭐ TOTAL XP</span></div>
+   <div class="stat"><b id="levelStat">1</b><span>🎖️ LEVEL</span></div>
+   <div class="stat"><b id="playedStat">0</b><span>🎯 ANSWERED</span></div>
+  </div>
+  <h2>Choose your game</h2><div class="games" id="gamesGrid"></div>
+ </section>
+ <section id="screen">
+  <div class="crumb"><button class="secondary" id="backHome">← All games</button> <span id="crumbText"></span></div>
+  <div id="departmentView"><h2 id="gameTitle"></h2><p class="small" id="gameDesc"></p><div class="dept-grid" id="deptGrid"></div></div>
+  <div id="quizView" class="hide">
+   <div class="quiz-top"><div><b id="quizTitle"></b><div class="small" id="quizMeta"></div></div><div><b id="quizScore">0 XP</b></div></div>
+   <div class="progress"><div id="progressBar"></div></div>
+   <div class="question-box">
+    <div class="q-number" id="qNumber"></div><div class="question" id="questionText"></div>
+    <div class="options" id="options"></div>
+    <div class="feedback" id="feedback"></div>
+    <div class="quiz-actions"><button class="secondary" id="quitQuiz">Exit quiz</button><button id="nextQuestion" disabled>Next question →</button></div>
+   </div>
+  </div>
+  <div id="resultView" class="hide result">
+   <div class="big">🏆</div><h2>Department completed!</h2><p id="resultText"></p><h2 id="resultScore"></h2><p id="resultXP"></p>
+   <button id="retryQuiz">Play again</button> <button class="secondary" id="backDepartments">Departments</button>
+  </div>
+ </section>
+</main>
+<footer>KUTTIES • A learning game website • Keep exploring and keep learning!</footer>
+<script>
+"use strict";
+const GAMES = [
+ {name:"Quiz Master",emoji:"🧠",color:"#7958e8",desc:"A little bit of everything. Test your school knowledge.",depts:[["Science","science"],["History","history"],["Maths","math"],["Geography","geo"],["English","english"]]},
+ {name:"Study Adventure",emoji:"🗺️",color:"#ff7a59",desc:"Travel through school subjects and unlock knowledge.",depts:[["Biology","biology"],["Physics","physics"],["Chemistry","chemistry"],["Civics","civics"],["Tamil","tamil"]]},
+ {name:"Brain Hero",emoji:"🦸",color:"#ed5799",desc:"Train your brain with numbers, words and patterns.",depts:[["Logic","logic"],["Number Puzzles","math"],["Patterns","logic"],["Vocabulary","english"],["General Knowledge","gk"]]},
+ {name:"Science Lab",emoji:"🔬",color:"#21a9a0",desc:"Explore living things, matter, energy and our planet.",depts:[["Biology","biology"],["Physics","physics"],["Chemistry","chemistry"],["Earth Science","geo"],["Space Science","space"]]},
+ {name:"History Kingdom",emoji:"🏰",color:"#b77a35",desc:"Discover kingdoms, leaders, inventions and events.",depts:[["Ancient History","history"],["Medieval History","history"],["Modern History","history"],["Indian History","history"],["Tamil History","history"]]},
+ {name:"Maths Battle",emoji:"➗",color:"#3987e8",desc:"Sharpen your calculation and problem-solving skills.",depts:[["Arithmetic","math"],["Fractions","math"],["Algebra","math"],["Geometry","math"],["Reasoning","logic"]]},
+ {name:"Space Explorer",emoji:"🪐",color:"#6851c9",desc:"Journey through planets, stars and space science.",depts:[["Solar System","space"],["Stars & Galaxies","space"],["Earth & Moon","space"],["Space Missions","space"],["Astronomy","space"]]},
+ {name:"Word Master",emoji:"📚",color:"#18a56f",desc:"Grow your vocabulary and master English words.",depts:[["Vocabulary","english"],["Grammar","grammar"],["Spelling","spelling"],["Synonyms","english"],["Antonyms","antonym"]]},
+ {name:"School Champions",emoji:"🏅",color:"#e5a51d",desc:"A school challenge across five learning areas.",depts:[["Science","science"],["Social Science","history"],["Mathematics","math"],["English","english"],["General Knowledge","gk"]]},
+ {name:"Detective Brain",emoji:"🕵️",color:"#4d647c",desc:"Find clues, solve patterns and think carefully.",depts:[["Logic","logic"],["Observation","gk"],["Codes","logic"],["Patterns","logic"],["Deduction","logic"]]}
+];
+const BANK = {
+science:[
+["Which organ pumps blood around the human body?","Heart",["Lungs","Brain","Stomach"],"The heart pumps blood through the circulatory system."],
+["Which gas do plants absorb during photosynthesis?","Carbon dioxide",["Oxygen","Nitrogen","Hydrogen"],"Plants use carbon dioxide, water and light to make food."],
+["What is the basic unit of life?","Cell",["Tissue","Organ","Atom"],"All living organisms are made of one or more cells."],
+["Which force pulls objects toward Earth?","Gravity",["Friction","Magnetism","Buoyancy"],"Gravity attracts objects with mass toward one another."],
+["Which part of a plant absorbs most water from soil?","Roots",["Flowers","Fruits","Leaves"],"Roots absorb water and minerals from the soil."],
+["Which material is attracted to a magnet?","Iron",["Wood","Glass","Rubber"],"Iron is a magnetic material."],
+["At what temperature does pure water freeze at standard pressure?","0°C",["10°C","50°C","100°C"],"Pure water freezes at 0°C at standard atmospheric pressure."],
+["Which vitamin can the body make with help from sunlight?","Vitamin D",["Vitamin C","Vitamin B12","Vitamin K"],"Sunlight helps the skin produce vitamin D."],
+["Which blood cells help fight infection?","White blood cells",["Red blood cells","Platelets","Plasma"],"White blood cells are part of the immune system."],
+["What is the main source of energy for Earth?","The Sun",["The Moon","Mars","The ocean"],"Sunlight drives many processes on Earth."],
+["Which state of matter has a fixed shape and fixed volume?","Solid",["Liquid","Gas","Plasma"],"A solid keeps its shape and volume."],
+["Which instrument measures temperature?","Thermometer",["Barometer","Ruler","Compass"],"A thermometer measures temperature."],
+["Which organ helps humans breathe?","Lungs",["Kidneys","Liver","Pancreas"],"The lungs exchange oxygen and carbon dioxide."],
+["What do bees collect from flowers to make honey?","Nectar",["Sand","Leaves","Bark"],"Bees collect nectar and process it into honey."],
+["Which planet is known for its prominent rings?","Saturn",["Mercury","Earth","Mars"],"Saturn has a bright and extensive ring system."],
+["What is the chemical symbol for oxygen?","O",["Ox","Og","Oy"],"The chemical symbol for oxygen is O."],
+["Which simple machine is a seesaw an example of?","Lever",["Pulley","Screw","Wedge"],"A seesaw works as a lever around a fulcrum."],
+["Which part of the eye controls how much light enters?","Iris",["Retina","Lens","Cornea"],"The iris changes pupil size to control incoming light."],
+["What is the process by which liquid changes into gas?","Evaporation",["Condensation","Freezing","Melting"],"Evaporation changes a liquid into vapour."],
+["Which nutrient is a major source of energy for the body?","Carbohydrates",["Vitamins","Minerals","Water"],"Carbohydrates are an important energy source."],
+["Which planet is closest to the Sun?","Mercury",["Venus","Earth","Jupiter"],"Mercury is the innermost planet."],
+["Which part of the cell contains most genetic material?","Nucleus",["Cell wall","Vacuole","Cytoplasm"],"The nucleus contains most of a eukaryotic cell's DNA."],
+["What do we call animals that eat only plants?","Herbivores",["Carnivores","Omnivores","Decomposers"],"Herbivores feed on plants."],
+["Which gas makes up most of Earth's atmosphere?","Nitrogen",["Oxygen","Carbon dioxide","Argon"],"Nitrogen makes up about 78% of dry air."],
+["Which device converts electrical energy into light?","Lamp",["Battery","Switch","Fuse"],"A lamp converts electrical energy into light and heat."],
+["What is the hardest naturally occurring mineral on the Mohs scale?","Diamond",["Quartz","Gypsum","Calcite"],"Diamond is rated 10 on the Mohs hardness scale."],
+["Which organs filter waste from the blood to make urine?","Kidneys",["Lungs","Stomach","Heart"],"The kidneys filter blood and produce urine."],
+["What is the center of an atom called?","Nucleus",["Electron cloud","Shell","Molecule"],"An atom has a central nucleus containing protons and neutrons."],
+["Which process helps green plants release water vapour from leaves?","Transpiration",["Respiration","Digestion","Germination"],"Transpiration is water loss from plant surfaces, mainly leaves."],
+["Which part of the skeleton protects the brain?","Skull",["Rib cage","Pelvis","Spine"],"The skull surrounds and protects the brain."]
+],
+history:[
+["Who was the first President of independent India?","Rajendra Prasad",["S. Radhakrishnan","Jawaharlal Nehru","Zakir Husain"],"Dr. Rajendra Prasad was India's first President."],
+["In which year did India become independent?","1947",["1942","1950","1935"],"India became independent on 15 August 1947."],
+["Who is popularly called the Father of the Nation in India?","Mahatma Gandhi",["Subhas Chandra Bose","Bhagat Singh","Sardar Patel"],"Mahatma Gandhi is widely known by this title in India."],
+["Which ancient civilization developed along the Indus River system?","Indus Valley Civilization",["Roman Civilization","Maya Civilization","Inca Civilization"],"The Indus Valley Civilization flourished in South Asia."],
+["Who founded the Maurya Empire?","Chandragupta Maurya",["Ashoka","Harsha","Kanishka"],"Chandragupta Maurya established the Maurya Empire."],
+["Which emperor embraced Buddhism after the Kalinga War?","Ashoka",["Akbar","Samudragupta","Chandragupta II"],"Ashoka's inscriptions describe his turn toward dhamma after the Kalinga War."],
+["Who led the Salt March in 1930?","Mahatma Gandhi",["Bal Gangadhar Tilak","Lala Lajpat Rai","Dadabhai Naoroji"],"Gandhi led the Salt March from Sabarmati to Dandi."],
+["Which city was the capital of the Vijayanagara Empire?","Hampi",["Madurai","Patna","Agra"],"Hampi was the capital region of Vijayanagara."],
+["Who was the first Prime Minister of India?","Jawaharlal Nehru",["Rajendra Prasad","Lal Bahadur Shastri","Sardar Patel"],"Jawaharlal Nehru served as India's first Prime Minister."],
+["Which movement began in 1942 in India?","Quit India Movement",["Swadeshi Movement","Khilafat Movement","Non-Cooperation Movement"],"The Quit India Movement was launched in August 1942."],
+["Who was known as the Iron Man of India?","Sardar Vallabhbhai Patel",["B. R. Ambedkar","C. Rajagopalachari","Rajendra Prasad"],"Patel played a major role in integrating princely states."],
+["Which famous emperor built the Taj Mahal?","Shah Jahan",["Akbar","Babur","Aurangzeb"],"Shah Jahan commissioned the Taj Mahal in memory of Mumtaz Mahal."],
+["Who wrote the Indian national anthem?","Rabindranath Tagore",["Bankim Chandra Chatterjee","Sarojini Naidu","Subramania Bharati"],"Rabindranath Tagore wrote Jana Gana Mana."],
+["Which queen led resistance against the British in Jhansi in 1857?","Rani Lakshmibai",["Begum Hazrat Mahal","Ahilyabai Holkar","Razia Sultan"],"Rani Lakshmibai became a leading figure in the 1857 uprising."],
+["Who was the chief architect of the Indian Constitution's drafting committee?","B. R. Ambedkar",["Rajendra Prasad","Jawaharlal Nehru","C. Rajagopalachari"],"B. R. Ambedkar chaired the Constitution's Drafting Committee."],
+["Which Tamil Chola ruler is associated with the Brihadisvara Temple at Thanjavur?","Rajaraja Chola I",["Karikala Chola","Rajendra Chola II","Kulothunga III"],"Rajaraja Chola I commissioned the great temple at Thanjavur."],
+["Which Chola ruler led a naval expedition to Southeast Asia?","Rajendra Chola I",["Rajaraja Chola I","Karikala Chola","Vijayalaya Chola"],"Rajendra Chola I's reign included a major overseas expedition."],
+["Who founded the Mughal Empire in India?","Babur",["Akbar","Humayun","Sher Shah Suri"],"Babur founded the Mughal Empire after the First Battle of Panipat in 1526."],
+["The French Revolution began in which year?","1789",["1776","1815","1848"],"The French Revolution began in 1789."],
+["Which ancient university was located in present-day Bihar?","Nalanda",["Takshashila","Vikramashila","Valabhi"],"Nalanda was a renowned ancient center of learning in Bihar."],
+["Who gave the slogan 'Give me blood, and I will give you freedom'?","Subhas Chandra Bose",["Mahatma Gandhi","Bhagat Singh","Jawaharlal Nehru"],"The slogan is associated with Subhas Chandra Bose."],
+["Who was the first woman ruler of the Delhi Sultanate?","Razia Sultan",["Nur Jahan","Rani Durgavati","Chand Bibi"],"Razia ruled the Delhi Sultanate in the 13th century."],
+["Which movement encouraged the use of Indian-made goods?","Swadeshi Movement",["Khilafat Movement","Home Rule Movement","Civil Disobedience Movement"],"The Swadeshi Movement promoted indigenous goods."],
+["Who was the first Indian to travel into space?","Rakesh Sharma",["Kalpana Chawla","Sunita Williams","Vikram Sarabhai"],"Rakesh Sharma travelled aboard Soyuz T-11 in 1984."],
+["Which leader is associated with the slogan 'Jai Jawan, Jai Kisan'?","Lal Bahadur Shastri",["Indira Gandhi","Morarji Desai","Atal Bihari Vajpayee"],"Lal Bahadur Shastri popularized the slogan."],
+["Which battle in 1757 strengthened East India Company power in Bengal?","Battle of Plassey",["Battle of Buxar","Battle of Panipat","Battle of Talikota"],"The Battle of Plassey was a turning point in Company rule in Bengal."],
+["Who founded the Sikh religion?","Guru Nanak",["Guru Gobind Singh","Guru Arjan","Guru Tegh Bahadur"],"Guru Nanak was the founder of Sikhism."],
+["Which famous Tamil poet wrote 'Panchali Sabatham'?","Subramania Bharati",["Bharathidasan","Avvaiyar","Thiruvalluvar"],"Panchali Sabatham is a work by Subramania Bharati."],
+["Who was popularly known as Kappalottiya Tamizhan?","V. O. Chidambaranar",["C. N. Annadurai","K. Kamaraj","Subramania Siva"],"V. O. Chidambaranar is remembered for his Swadeshi Steam Navigation Company."],
+["Which emperor built Fatehpur Sikri as an imperial capital?","Akbar",["Shah Jahan","Jahangir","Babur"],"Akbar developed Fatehpur Sikri as his capital."]
+],
+geo:[
+["Which is the largest ocean on Earth?","Pacific Ocean",["Atlantic Ocean","Indian Ocean","Arctic Ocean"],"The Pacific is the largest ocean."],
+["Which is the highest mountain above sea level?","Mount Everest",["K2","Kangchenjunga","Lhotse"],"Mount Everest is the highest mountain above sea level."],
+["Which imaginary line divides Earth into Northern and Southern Hemispheres?","Equator",["Prime Meridian","Tropic of Cancer","Arctic Circle"],"The Equator is at 0 degrees latitude."],
+["Which is the largest hot desert in the world?","Sahara",["Gobi","Kalahari","Arabian"],"The Sahara is the world's largest hot desert."],
+["Which continent contains the Amazon Rainforest?","South America",["Africa","Asia","Australia"],"Most of the Amazon Rainforest lies in South America."],
+["What is the capital of Japan?","Tokyo",["Kyoto","Osaka","Nagoya"],"Tokyo is Japan's capital."],
+["Which river flows through Egypt?","Nile",["Amazon","Danube","Yangtze"],"The Nile flows north through Egypt into the Mediterranean Sea."],
+["Which Indian state has the longest coastline?","Gujarat",["Tamil Nadu","Andhra Pradesh","Kerala"],"Gujarat has the longest coastline among Indian states."],
+["Which is the smallest continent by land area?","Australia",["Europe","Antarctica","South America"],"Australia is the smallest continent by land area."],
+["Which country is often described as shaped like a boot?","Italy",["Greece","Portugal","Norway"],"Italy's peninsula resembles a boot."],
+["What is the capital of Australia?","Canberra",["Sydney","Melbourne","Perth"],"Canberra is Australia's capital."],
+["Which line of longitude is 0 degrees?","Prime Meridian",["Equator","International Date Line","Tropic of Capricorn"],"The Prime Meridian is 0 degrees longitude."],
+["Which Indian state is famous for its backwaters?","Kerala",["Punjab","Haryana","Rajasthan"],"Kerala is known for its backwater waterways."],
+["Which plateau covers much of peninsular India?","Deccan Plateau",["Tibetan Plateau","Colorado Plateau","Iranian Plateau"],"The Deccan Plateau occupies much of southern India."],
+["Which is the largest country by land area?","Russia",["Canada","China","United States"],"Russia is the largest country by area."],
+["Which sea lies between Europe and Africa?","Mediterranean Sea",["Caribbean Sea","Bering Sea","Arabian Sea"],"The Mediterranean lies between southern Europe and northern Africa."],
+["Which Indian river is also called the Dakshin Ganga?","Godavari",["Narmada","Kaveri","Krishna"],"The Godavari is often called the Dakshin Ganga."],
+["Which is the capital of Tamil Nadu?","Chennai",["Coimbatore","Madurai","Tiruchirappalli"],"Chennai is the capital of Tamil Nadu."],
+["Which country has the city of Cairo as its capital?","Egypt",["Jordan","Morocco","Sudan"],"Cairo is the capital of Egypt."],
+["What do contour lines on a map usually join?","Places of equal elevation",["Places of equal rainfall","Places of equal population","Places of equal temperature"],"Contour lines connect points of equal height above a reference level."],
+["Which is the largest island in the world?","Greenland",["Madagascar","Borneo","New Guinea"],"Greenland is the largest island, excluding continental landmasses."],
+["Which Indian state is known as the Land of Five Rivers?","Punjab",["Bihar","Assam","Odisha"],"Punjab's name is associated with five rivers."],
+["Which mountain range forms a natural barrier north of the Indian subcontinent?","Himalayas",["Aravalli","Western Ghats","Vindhya"],"The Himalayas stretch along India's northern region."],
+["Which ocean lies to the east of Africa and south of India?","Indian Ocean",["Pacific Ocean","Atlantic Ocean","Arctic Ocean"],"The Indian Ocean lies between Africa, Asia and Australia."],
+["What is the capital of France?","Paris",["Lyon","Marseille","Nice"],"Paris is the capital of France."],
+["Which is the world's largest delta system?","Ganges-Brahmaputra-Meghna Delta",["Nile Delta","Mekong Delta","Niger Delta"],"The Ganges-Brahmaputra-Meghna system forms the largest delta."],
+["Which Indian state is home to the Thar Desert?","Rajasthan",["Sikkim","Kerala","Manipur"],"The Thar Desert is mainly in Rajasthan."],
+["Which country is home to the Great Barrier Reef?","Australia",["Indonesia","India","South Africa"],"The Great Barrier Reef lies off Australia's Queensland coast."],
+["Which direction does the Sun appear to rise from?","East",["West","North","South"],"Because Earth rotates eastward, the Sun appears to rise in the east."],
+["Which is the coldest continent?","Antarctica",["Europe","Asia","North America"],"Antarctica is the coldest continent."]
+],
+space:[
+["Which planet is called the Red Planet?","Mars",["Venus","Jupiter","Neptune"],"Iron-rich dust gives Mars its reddish appearance."],
+["What is the name of Earth's natural satellite?","Moon",["Phobos","Europa","Titan"],"The Moon is Earth's natural satellite."],
+["Which star is closest to Earth?","The Sun",["Sirius","Proxima Centauri","Vega"],"The Sun is the nearest star to Earth."],
+["How many planets are in our Solar System?","Eight",["Seven","Nine","Ten"],"The Solar System has eight recognized planets."],
+["Which planet is the largest in our Solar System?","Jupiter",["Saturn","Earth","Neptune"],"Jupiter is the largest planet."],
+["What galaxy contains our Solar System?","Milky Way",["Andromeda","Whirlpool","Sombrero"],"Our Solar System is in the Milky Way galaxy."],
+["What causes day and night on Earth?","Earth's rotation",["Earth's revolution","The Moon's orbit","Solar flares"],"Earth rotates on its axis, causing day and night."],
+["What is the path of a planet around the Sun called?","Orbit",["Axis","Crater","Eclipse"],"A planet travels around the Sun along an orbit."],
+["Which planet is famous for its large red spot?","Jupiter",["Mars","Venus","Mercury"],"Jupiter's Great Red Spot is a giant storm."],
+["What is a group of stars forming a pattern called?","Constellation",["Asteroid","Comet","Nebula"],"A constellation is a recognized pattern of stars."],
+["Which planet is farthest from the Sun?","Neptune",["Uranus","Saturn","Jupiter"],"Neptune is the eighth and farthest recognized planet."],
+["What do we call a rocky object orbiting the Sun, mostly found between Mars and Jupiter?","Asteroid",["Comet","Meteor","Moon"],"Many asteroids orbit in the main asteroid belt."],
+["What is the name of the first artificial satellite?","Sputnik 1",["Apollo 11","Explorer 1","Vostok 1"],"Sputnik 1 was launched by the Soviet Union in 1957."],
+["Which was the first crewed Moon landing mission?","Apollo 11",["Apollo 8","Apollo 13","Gemini 4"],"Apollo 11 landed astronauts on the Moon in July 1969."],
+["What is a light-year a measure of?","Distance",["Time","Brightness","Mass"],"A light-year is the distance light travels in one year."],
+["Which planet rotates on its side to a great extent?","Uranus",["Mars","Mercury","Earth"],"Uranus has an extreme axial tilt."],
+["What is the Sun mainly made of?","Hydrogen and helium",["Oxygen and nitrogen","Iron and nickel","Carbon and oxygen"],"The Sun is mostly hydrogen and helium."],
+["What do we call a space rock that reaches Earth's surface?","Meteorite",["Meteoroid","Comet","Asteroid belt"],"A meteorite is a space rock that survives passage through the atmosphere and reaches the ground."],
+["Which planet has the most prominent visible ring system?","Saturn",["Earth","Mars","Venus"],"Saturn's rings are especially bright and easy to observe."],
+["What is the name of India's first lunar mission?","Chandrayaan-1",["Mangalyaan","Aditya-L1","Astrosat"],"Chandrayaan-1 was India's first lunar probe."],
+["Which Indian mission successfully soft-landed near the Moon's south polar region in 2023?","Chandrayaan-3",["Chandrayaan-2","Mangalyaan","Gaganyaan"],"Chandrayaan-3 achieved a soft landing in August 2023."],
+["What is the boundary around a black hole beyond which light cannot escape called?","Event horizon",["Photosphere","Ozone layer","Asteroid belt"],"The event horizon marks the point of no return around a black hole."],
+["Which planet is known as Earth's twin because of its similar size?","Venus",["Mars","Jupiter","Saturn"],"Venus is similar to Earth in size, though its environment is very different."],
+["What causes the phases of the Moon?","The changing view of its sunlit half",["Earth's shadow every night","Clouds covering the Moon","The Moon changing shape"],"We see different portions of the Moon's illuminated half as it orbits Earth."],
+["What is the name of the force that keeps planets in orbit around the Sun?","Gravity",["Friction","Sound","Electric current"],"The Sun's gravity helps keep planets in orbit."],
+["Which planet has a day longer than its year?","Venus",["Earth","Mars","Jupiter"],"Venus rotates very slowly; its rotation period is longer than its orbital period."],
+["What is a comet's tail mainly made visible by?","Gas and dust released by the comet",["Molten rock","Ocean water","Burning trees"],"Solar heating releases gas and dust that can form a visible tail."],
+["Which space telescope launched in 2021 observes mainly in infrared?","James Webb Space Telescope",["Hubble Space Telescope","Kepler Space Telescope","Chandra X-ray Observatory"],"The James Webb Space Telescope is designed primarily for infrared astronomy."],
+["What is the name of the Indian space agency?","ISRO",["NASA","ESA","JAXA"],"ISRO stands for Indian Space Research Organisation."],
+["What do astronauts wear outside a spacecraft to stay protected?","Spacesuit",["Raincoat","Lab apron","Diving mask"],"A spacesuit provides life support and protection in space."]
+],
+english:[
+["Which word is a synonym of 'happy'?","Joyful",["Angry","Tired","Careless"],"Joyful means feeling or showing happiness."],
+["Which word is the opposite of 'ancient'?","Modern",["Old","Historic","Early"],"Modern is the opposite of ancient."],
+["Choose the correctly spelled word.","Beautiful",["Beautifull","Beutiful","Beautifal"],"Beautiful is spelled B-E-A-U-T-I-F-U-L."],
+["Which is a noun in the sentence 'The bird sings'?","Bird",["The","Sings","Quickly"],"Bird names an animal, so it is a noun."],
+["What is the plural of 'child'?","Children",["Childs","Childes","Childrens"],"Children is the irregular plural of child."],
+["Which punctuation mark ends a question?","Question mark",["Full stop","Comma","Apostrophe"],"A question mark is used at the end of a direct question."],
+["Choose the past tense of 'go'.","Went",["Goed","Gone","Going"],"Went is the simple past tense of go."],
+["Which word is an adjective in 'a bright star'?","Bright",["A","Star","The"],"Bright describes the noun star."],
+["Which is the correct article: '___ apple'?","An",["A","Thee","No article ever"],"An is used before a vowel sound, as in apple."],
+["What is the opposite of 'generous'?","Selfish",["Kind","Helpful","Giving"],"Selfish is an opposite of generous."],
+["Which word means 'to look carefully'?","Observe",["Forget","Ignore","Scatter"],"Observe means to watch or notice carefully."],
+["Choose the correct sentence.","She plays tennis.",["She play tennis.","She playing tennis.","She are play tennis."],"The singular subject she takes plays in the simple present."],
+["What is the plural of 'mouse' (the animal)?","Mice",["Mouses","Mices","Mouse"],"Mice is the usual plural of the animal mouse."],
+["Which is a pronoun?","They",["Table","Quickly","Blue"],"They is a pronoun used in place of a noun."],
+["Which word rhymes with 'light'?","Night",["Late","Let","Lot"],"Light and night share the same ending sound."],
+["What is the comparative form of 'tall'?","Taller",["Tallest","More tall","Tallful"],"Taller is the comparative form of tall."],
+["Which word is a verb?","Run",["Happiness","Green","Soft"],"Run expresses an action."],
+["Choose the correct contraction of 'do not'.","Don't",["Doesn't","Didn't","Won't"],"Don't is the contraction of do not."],
+["Which word means the same as 'begin'?","Start",["Finish","Close","Stop"],"Start means to begin."],
+["What is the opposite of 'expand'?","Contract",["Increase","Enlarge","Spread"],"Contract means to become smaller or draw together."],
+["Which sentence uses a capital letter correctly?","Ravi lives in Chennai.",["ravi lives in Chennai.","Ravi lives in chennai.","ravi lives in chennai."],"Names of people and places begin with capital letters."],
+["What is the past tense of 'write'?","Wrote",["Writed","Written","Writing"],"Wrote is the simple past tense of write."],
+["Which word is an adverb in 'He ran quickly'?","Quickly",["He","Ran","None"],"Quickly describes how he ran."],
+["What is the feminine form of 'king'?","Queen",["Princess","Duchess","Lady"],"Queen is the feminine counterpart of king."],
+["Which word is a conjunction?","Because",["Beautiful","Jump","Garden"],"Because joins clauses and gives a reason."],
+["Choose the correct possessive form for a book belonging to Rani.","Rani's book",["Ranis book","Ranis' book","Rani book's"],"An apostrophe plus s marks the singular name's possession."],
+["Which word means 'very large'?","Enormous",["Tiny","Narrow","Brief"],"Enormous means very large."],
+["What is the opposite of 'victory'?","Defeat",["Success","Triumph","Achievement"],"Defeat is the opposite of victory."],
+["Which is a complete sentence?","The children are reading.",["Because the children","Under the old tree","When the bell"],"The sentence has a subject and a complete predicate."],
+["Which word is spelled correctly?","Environment",["Enviroment","Envirnoment","Environmant"],"Environment is the correct spelling."]
+],
+gk:[
+["How many days are there in a leap year?","366",["365","364","367"],"A leap year has 366 days."],
+["How many sides does a hexagon have?","Six",["Five","Seven","Eight"],"A hexagon has six sides."],
+["Which is the national animal of India?","Bengal tiger",["Asiatic lion","Elephant","Leopard"],"The Bengal tiger is India's national animal."],
+["Which is the national bird of India?","Indian peacock",["Sparrow","Eagle","Parrot"],"The Indian peacock is India's national bird."],
+["How many colours are traditionally named in a rainbow?","Seven",["Five","Six","Eight"],"The familiar rainbow sequence is described using seven colours."],
+["Which device is used to find directions?","Compass",["Thermometer","Microscope","Stethoscope"],"A compass indicates direction using a magnetic needle."],
+["How many players from one team are on the field in a standard cricket match?","Eleven",["Ten","Nine","Twelve"],"A cricket team has eleven players on the field."],
+["Which sport uses a shuttlecock?","Badminton",["Tennis","Football","Hockey"],"Badminton is played with a shuttlecock."],
+["What is the currency of Japan?","Yen",["Won","Yuan","Rupee"],"The yen is Japan's currency."],
+["Which festival is known as the festival of lights in India?","Diwali",["Holi","Pongal","Onam"],"Diwali is widely known as the festival of lights."],
+["How many minutes are there in one hour?","60",["50","100","30"],"One hour contains 60 minutes."],
+["Which instrument has black and white keys?","Piano",["Flute","Drum","Trumpet"],"A piano is played using a keyboard of keys."],
+["Which is the largest land animal alive today?","African elephant",["Giraffe","Hippopotamus","Rhinoceros"],"The African elephant is the largest living land animal."],
+["Which language is primarily used to structure web pages?","HTML",["MP3","JPEG","PDF"],"HTML provides the structure and content of web pages."],
+["How many continents are commonly taught in the seven-continent model?","Seven",["Five","Six","Eight"],"The common model identifies seven continents."],
+["Which month has 28 days in a common year?","February",["January","April","June"],"February has 28 days in a common year."],
+["Which metal is liquid at ordinary room temperature?","Mercury",["Copper","Aluminium","Iron"],"Mercury is liquid at typical room temperature."],
+["What is the young one of a frog called?","Tadpole",["Caterpillar","Calf","Cub"],"A frog's larval stage is called a tadpole."],
+["Which is the fastest land animal over short distances?","Cheetah",["Lion","Horse","Wolf"],"The cheetah is the fastest land animal in short sprints."],
+["Which day comes after Friday?","Saturday",["Thursday","Sunday","Monday"],"Saturday follows Friday."],
+["What is the shape of a stop sign in many countries?","Octagon",["Triangle","Circle","Pentagon"],"A standard stop sign is an eight-sided octagon."],
+["Which part of a computer is often called its brain?","CPU",["Monitor","Keyboard","Mouse"],"The CPU executes instructions and processes data."],
+["How many degrees are in a right angle?","90",["45","180","360"],"A right angle measures 90 degrees."],
+["Which animal is known for changing its colour for camouflage?","Chameleon",["Camel","Dolphin","Penguin"],"Many chameleons can change colour for communication and camouflage."],
+["Which gas is commonly filled in party balloons to make them float safely?","Helium",["Oxygen","Carbon dioxide","Nitrogen"],"Helium is a light, non-flammable gas used in floating balloons."],
+["Which ocean is between Africa and Australia?","Indian Ocean",["Atlantic Ocean","Arctic Ocean","Southern Ocean"],"The Indian Ocean lies between Africa and Australia."],
+["What is the main language used in Brazil?","Portuguese",["Spanish","French","English"],"Portuguese is Brazil's official language."],
+["Which animal is known as the ship of the desert?","Camel",["Horse","Yak","Donkey"],"Camels are adapted to travel in arid desert environments."],
+["Which is the largest internal organ in the human body?","Liver",["Heart","Brain","Kidney"],"The liver is the largest internal organ."],
+["How many wheels does a standard tricycle have?","Three",["Two","Four","Five"],"A tricycle has three wheels."]
+],
+tamil:[
+["Which script is used to write Tamil?","Tamil script",["Devanagari","Arabic","Cyrillic"],"Tamil is written using the Tamil script."],
+["Who is traditionally credited with composing the Tirukkural?","Thiruvalluvar",["Kambar","Avvaiyar","Ilango Adigal"],"The Tirukkural is traditionally attributed to Thiruvalluvar."],
+["How many couplets are in the Tirukkural?","1,330",["1,000","1,250","1,500"],"The Tirukkural contains 1,330 kurals."],
+["Which is the first letter of the Tamil alphabet?","அ",["ஆ","இ","ஈ"],"அ (a) is the first Tamil vowel."],
+["What is the Tamil name commonly used for a poem?","கவிதை",["கணிதம்","வரலாறு","அறிவியல்"],"கவிதை means poem in Tamil."],
+["Who wrote the epic Silappathikaram?","Ilango Adigal",["Sattanar","Kambar","Sekizhar"],"Silappathikaram is attributed to Ilango Adigal."],
+["Which poet is popularly known as Mahakavi in Tamil literature?","Subramania Bharati",["Kambar","Avvaiyar","Bharathidasan"],"Subramania Bharati is widely celebrated as Mahakavi Bharati."],
+["What is the Tamil word for 'water'?","நீர்",["நெருப்பு","காற்று","மண்"],"நீர் means water."],
+["Which ancient Tamil grammar work is attributed to Tolkappiyar?","Tolkappiyam",["Nannool","Tirukkural","Manimekalai"],"Tolkappiyam is an ancient Tamil grammar text."],
+["What is the plural marker commonly used in Tamil for people?","கள்",["ஆல்","இல்","உம்"],"கள் is a common plural suffix in Tamil, though usage varies by word."],
+["Who wrote Kamba Ramayanam?","Kambar",["Ilango Adigal","Thiruvalluvar","Avvaiyar"],"Kamba Ramayanam is a Tamil retelling by Kambar."],
+["Which Tamil word means 'book'?","நூல்",["மரம்","மலை","கடல்"],"நூல் can mean book or text."],
+["Which is a famous Tamil ethical text?","Tirukkural",["Arthashastra","Rajatarangini","Indica"],"The Tirukkural is a celebrated Tamil ethical work."],
+["What is the Tamil word for 'school'?","பள்ளி",["வீடு","காடு","நதி"],"பள்ளி means school."],
+["Which poet is associated with the work 'Purananuru'?","Sangam poets",["Only Kambar","Only Bharati","Only Ilango"],"Purananuru is an anthology composed by multiple Sangam-era poets."],
+["What does 'அறம்' broadly mean?","Virtue or righteousness",["Wealth only","War only","Travel"],"அறம் refers to virtue, moral conduct or righteousness."],
+["Which Tamil literary period includes Ettuthokai and Pattuppattu?","Sangam literature",["Bhakti period only","Modern period","Nayak period"],"Ettuthokai and Pattuppattu are major Sangam anthologies."],
+["Which Tamil word means 'friend'?","நண்பன்",["எதிரி","ஆசிரியர்","மாணவர்"],"நண்பன் means male friend; நண்பர் is also used respectfully."],
+["Who is the author traditionally associated with Manimekalai?","Sattanar",["Kambar","Thiruvalluvar","Tolkappiyar"],"Manimekalai is attributed to Sattanar."],
+["What is the Tamil word for 'land'?","நிலம்",["வானம்","நீர்","ஒலி"],"நிலம் means land or ground."]
+],
+civics:[
+["What is the supreme law of India?","The Constitution",["A state rulebook","A school textbook","A court notice"],"The Constitution is the supreme law of India."],
+["What is the minimum voting age for Indian citizens in general elections?","18 years",["16 years","21 years","25 years"],"Indian citizens can vote in general elections from age 18, subject to registration and eligibility."],
+["Who is the constitutional head of the Union of India?","The President",["The Prime Minister","The Chief Justice","The Speaker"],"The President is the constitutional head of the Union."],
+["Which body makes laws for the Union of India?","Parliament",["Election Commission","Supreme Court","Finance Commission"],"Parliament is India's national legislature."],
+["What are the two Houses of the Indian Parliament?","Lok Sabha and Rajya Sabha",["Vidhan Sabha and Lok Sabha","Rajya Sabha and Gram Sabha","Supreme Court and Lok Sabha"],"India's Parliament consists of Lok Sabha and Rajya Sabha."],
+["Which institution conducts elections in India?","Election Commission of India",["NITI Aayog","Supreme Court","Union Public Service Commission"],"The Election Commission of India supervises elections."],
+["Which part of government interprets laws?","Judiciary",["Legislature","Executive","Municipality"],"The judiciary interprets laws and resolves legal disputes."],
+["What is local self-government in a village commonly called?","Gram Panchayat",["Lok Sabha","Rajya Sabha","High Court"],"A Gram Panchayat is a village-level local government body."],
+["Who is the head of the Union Council of Ministers?","Prime Minister",["President","Governor","Chief Justice"],"The Prime Minister heads the Union Council of Ministers."],
+["Which document lists the fundamental rights of Indian citizens?","The Constitution",["A passport","A bank passbook","A ration receipt"],"Fundamental Rights are set out in Part III of the Constitution."]
+],
+biology:[
+["Which organelle is often called the powerhouse of the cell?","Mitochondrion",["Ribosome","Nucleus","Golgi body"],"Mitochondria release usable energy through cellular respiration."],
+["Which pigment gives most leaves their green colour?","Chlorophyll",["Haemoglobin","Melanin","Keratin"],"Chlorophyll absorbs light for photosynthesis."],
+["Which system transports blood around the body?","Circulatory system",["Digestive system","Nervous system","Skeletal system"],"The circulatory system moves blood through the body."],
+["What is the study of plants called?","Botany",["Zoology","Ecology","Geology"],"Botany is the scientific study of plants."],
+["What is the study of animals called?","Zoology",["Botany","Astronomy","Meteorology"],"Zoology is the scientific study of animals."]
+],
+physics:[
+["What is the SI unit of force?","Newton",["Joule","Watt","Pascal"],"Force is measured in newtons."],
+["What is the SI unit of electric current?","Ampere",["Volt","Ohm","Watt"],"Electric current is measured in amperes."],
+["Which type of lens is thicker at the centre than at the edges?","Convex lens",["Concave lens","Plane glass","Prism"],"A convex lens is thicker at its centre."],
+["What is the bouncing back of light from a surface called?","Reflection",["Refraction","Diffusion","Absorption"],"Reflection is the return of light from a surface."],
+["Which instrument measures electric current?","Ammeter",["Voltmeter","Barometer","Thermometer"],"An ammeter measures electric current."]
+],
+chemistry:[
+["What is the chemical formula of water?","H₂O",["CO₂","O₂","NaCl"],"A water molecule contains two hydrogen atoms and one oxygen atom."],
+["What is the pH of a neutral solution at 25°C?","7",["1","4","14"],"A neutral aqueous solution has pH 7 at 25°C."],
+["Which gas is released when many acids react with reactive metals?","Hydrogen",["Oxygen","Nitrogen","Helium"],"Acid-metal reactions commonly release hydrogen gas."],
+["What is the chemical symbol for gold?","Au",["Ag","Go","Gd"],"Gold's chemical symbol is Au."],
+["Which method separates an insoluble solid from a liquid using filter paper?","Filtration",["Distillation","Evaporation","Sublimation"],"Filtration traps insoluble solid particles while liquid passes through."]
+],
+grammar:[
+["Choose the correct verb: 'They ___ football every Sunday.'","play",["plays","playing","is play"],"The plural subject they takes the base verb play."],
+["Choose the correct past tense: 'I ___ a letter yesterday.'","wrote",["write","written","writing"],"Wrote is the simple past form of write."],
+["Which sentence is in the future tense?","She will visit tomorrow.",["She visits daily.","She visited yesterday.","She is visiting now."],"Will visit expresses a future action."],
+["Choose the correct subject pronoun: '___ are my friends.'","They",["Them","Their","Theirs"],"They is the subject pronoun."],
+["Which punctuation mark separates items in a list?","Comma",["Apostrophe","Question mark","Hyphen"],"Commas commonly separate items in a list."]
+],
+spelling:[
+["Choose the correct spelling.","Knowledge",["Knowlege","Knowlidge","Knowledje"],"Knowledge is spelled K-N-O-W-L-E-D-G-E."],
+["Choose the correct spelling.","Separate",["Seperate","Seprate","Seperete"],"Separate is the correct spelling."],
+["Choose the correct spelling.","Necessary",["Neccessary","Necesary","Necassary"],"Necessary has one c and two s letters."],
+["Choose the correct spelling.","Receive",["Recieve","Receeve","Receve"],"Receive follows the 'i before e except after c' pattern."],
+["Choose the correct spelling.","Library",["Libary","Librery","Liberry"],"Library is spelled L-I-B-R-A-R-Y."]
+],
+logic:[
+["Complete the pattern: 2, 4, 6, 8, __.","10",["9","11","12"],"The pattern adds 2 each time."],
+["Complete the pattern: 5, 10, 15, 20, __.","25",["22","24","30"],"The pattern increases by 5."],
+["If all roses are flowers, which statement must be true?","Every rose is a flower.",["Every flower is a rose.","No roses are flowers.","Every rose is a tree."],"This restates the given relationship without reversing it."],
+["Which number does not belong: 3, 6, 9, 11, 12?","11",["3","6","9"],"All the other numbers are multiples of 3."],
+["A book is to reading as a fork is to __.","Eating",["Writing","Sleeping","Painting"],"A fork is a tool used for eating."]
+]
+};
+const FALLBACK = BANK.gk;
+const TYPE_BY_DEPT = {science:"science",biology:"biology",physics:"physics",chemistry:"chemistry",history:"history",math:"math",geo:"geo",space:"space",english:"english",tamil:"tamil",civics:"civics",gk:"gk",grammar:"grammar",spelling:"spelling",logic:"logic",antonym:"english"};
+function makeMath(i,seed){
+ const a=11+((i*7+seed*13)%70), b=2+((i*5+seed*3)%18), mode=(i+seed)%4;
+ let q,ans,wrong;
+ if(mode===0){q=`What is ${a} + ${b}?`;ans=a+b;wrong=[ans+1,ans-1,ans+10]}
+ else if(mode===1){const x=a+b;q=`What is ${x} − ${b}?`;ans=a;wrong=[a+1,a-1,a+2]}
+ else if(mode===2){q=`What is ${b} × ${((i+seed)%9)+2}?`;ans=b*(((i+seed)%9)+2);wrong=[ans+b,ans-1,ans+2]}
+ else {const divisor=2+((i+seed)%8),n=divisor*(2+((i*3+seed)%12));q=`What is ${n} ÷ ${divisor}?`;ans=n/divisor;wrong=[ans+1,ans-1,ans+2]}
+ return {q,ans:String(ans),wrong:wrong.map(String),why:`Calculate carefully: ${q.replace("What is ","").replace("?","")} = ${ans}.`};
+}
+function makeLogic(i,seed){
+ const step=2+((i+seed)%9),start=1+((i*3+seed)%20),n=start+step*3;
+ const ans=n+step;return {q:`Find the next number: ${start}, ${start+step}, ${start+2*step}, ${n}, __.`,ans:String(ans),wrong:[String(ans+1),String(ans-step),String(ans+2)],why:`Each term increases by ${step}, so the next number is ${ans}.`};
+}
+function buildQuestion(type,i,seed){
+ if(type==="math")return makeMath(i,seed);
+ if(type==="logic")return makeLogic(i,seed);
+ let bank=BANK[type]||FALLBACK;
+ let item=bank[(i+seed*3)%bank.length];
+ // Reword the prompt lightly for additional practice rounds while keeping the same fact and answer.
+ const prefixes=["Choose the best answer: ","Quick challenge: ","Knowledge check: ","Can you answer this? ","Think and answer: "];
+ return {q:prefixes[(i+seed)%prefixes.length]+item[0],ans:item[1],wrong:item[2],why:item[3]};
+}
+function makeOptions(q,seed){
+ let arr=[{t:q.ans,ok:true},...q.wrong.map(t=>({t,ok:false}))];
+ // deterministic shuffle
+ for(let i=arr.length-1;i>0;i--){let j=(seed*7+i*11)% (i+1);[arr[i],arr[j]]=[arr[j],arr[i]]}
+ return arr;
+}
+const QUESTION_DATA={};
+GAMES.forEach((game,gi)=>game.depts.forEach((dept,di)=>{
+ const type=TYPE_BY_DEPT[dept[1]]||"gk",key=`${gi}-${di}`;
+ QUESTION_DATA[key]=Array.from({length:40},(_,i)=>{
+  const q=buildQuestion(type,i,gi*5+di);
+  return {question:q.q,answer:q.ans,options:makeOptions(q,gi*1000+di*100+i),explanation:q.why};
+ });
+}));
+const TOTAL_QUESTIONS=Object.values(QUESTION_DATA).reduce((n,a)=>n+a.length,0);
+let profile=null,gameIndex=0,deptIndex=0,questions=[],qIndex=0,score=0,earned=0,answered=0,locked=false;
+const $=id=>document.getElementById(id);
+function loadProfile(){try{profile=JSON.parse(localStorage.getItem("kutties_profile")||"null")}catch(e){profile=null}if(profile&&profile.name){showHome()}}
+function saveProgress(){try{localStorage.setItem("kutties_stats",JSON.stringify({xp:profile.xp||0,answered:profile.answered||0}))}catch(e){}}
+function showHome(){
+ $("profileScreen").classList.add("hide");$("screen").classList.add("hide");$("homeScreen").classList.remove("hide");
+ $("profileChip").textContent=`👋 ${profile.name} • ${profile.standard||"Learner"}`;
+ let stats={};try{stats=JSON.parse(localStorage.getItem("kutties_stats")||"{}")}catch(e){}
+ profile.xp=stats.xp||profile.xp||0;profile.answered=stats.answered||profile.answered||0;
+ $("xpStat").textContent=profile.xp;$("levelStat").textContent=Math.floor(profile.xp/100)+1;$("playedStat").textContent=profile.answered;
+ $("gamesGrid").innerHTML=GAMES.map((g,i)=>`<div class="game-card" style="--accent:${g.color}" data-game="${i}"><div class="game-emoji">${g.emoji}</div><h3>${g.name}</h3><p>${g.desc}</p><div class="small" style="margin-top:10px">5 departments • 200 questions</div></div>`).join("");
+ document.querySelectorAll("[data-game]").forEach(el=>el.addEventListener("click",()=>openGame(+el.dataset.game)));
+}
+function openGame(i){gameIndex=i;$("homeScreen").classList.add("hide");$("screen").classList.remove("hide");$("departmentView").classList.remove("hide");$("quizView").classList.add("hide");$("resultView").classList.add("hide");const g=GAMES[i];$("gameTitle").textContent=g.emoji+" "+g.name;$("gameDesc").textContent=g.desc;$("crumbText").textContent=" / "+g.name;$("deptGrid").innerHTML=g.depts.map((d,j)=>`<div class="dept-card"><div><h3>${["🧪","📘","🎯","🌟","🏆"][j]} ${d[0]}</h3><p>40 questions • Multiple choice</p></div><div><div class="count">40 Q</div><button data-dept="${j}" style="margin-top:8px">Play</button></div></div>`).join("");document.querySelectorAll("[data-dept]").forEach(el=>el.addEventListener("click",()=>startQuiz(+el.dataset.dept)))}
+function startQuiz(di){deptIndex=di;questions=QUESTION_DATA[`${gameIndex}-${deptIndex}`].slice();for(let i=questions.length-1;i>0;i--){let j=Math.floor(Math.random()*(i+1));[questions[i],questions[j]]=[questions[j],questions[i]]}qIndex=0;score=0;earned=0;$("departmentView").classList.add("hide");$("resultView").classList.add("hide");$("quizView").classList.remove("hide");$("quizTitle").textContent=GAMES[gameIndex].depts[di][0];$("quizMeta").textContent=GAMES[gameIndex].name+" • 40 questions";renderQuestion()}
+function renderQuestion(){locked=false;let q=questions[qIndex];$("qNumber").textContent=`QUESTION ${qIndex+1} OF 40`;$("questionText").textContent=q.question;$("quizScore").textContent=`${earned} XP earned`;$("progressBar").style.width=((qIndex/40)*100)+"%";$("feedback").style.display="none";$("feedback").textContent="";$("nextQuestion").disabled=true;$("nextQuestion").textContent=qIndex===39?"See results →":"Next question →";$("options").innerHTML=q.options.map((o,i)=>`<button class="option" data-option="${i}">${String.fromCharCode(65+i)}. ${o.t}</button>`).join("");document.querySelectorAll("[data-option]").forEach(el=>el.addEventListener("click",()=>chooseAnswer(+el.dataset.option)))}
+function chooseAnswer(i){if(locked)return;locked=true;let q=questions[qIndex],picked=q.options[i],correct=q.options.findIndex(o=>o.ok);document.querySelectorAll("[data-option]").forEach((el,j)=>{el.disabled=true;if(j===correct)el.classList.add("correct");if(j===i&&!picked.ok)el.classList.add("wrong")});if(picked.ok){score++;earned+=10;$("feedback").innerHTML="✅ <b>Correct!</b> "+q.explanation}else{$("feedback").innerHTML="💡 <b>Good try!</b> The correct answer is <b>"+escapeHTML(q.answer)+"</b>. "+q.explanation}$("feedback").style.display="block";$("nextQuestion").disabled=false}
+function escapeHTML(s){return String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
+function nextQuestion(){if(!locked)return;if(qIndex<39){qIndex++;renderQuestion()}else finishQuiz()}
+function finishQuiz(){profile.xp=(profile.xp||0)+earned;profile.answered=(profile.answered||0)+40;saveProgress();try{localStorage.setItem("kutties_profile",JSON.stringify(profile))}catch(e){}$("quizView").classList.add("hide");$("resultView").classList.remove("hide");$("progressBar").style.width="100%";$("resultText").textContent=`You answered ${score} out of 40 questions correctly.`;$("resultScore").textContent=`${score*2.5}% • ${score}/40`;$("resultXP").textContent=`You earned ${earned} XP. Your total XP is ${profile.xp}.`; }
+$("saveProfile").addEventListener("click",()=>{let name=$("studentName").value.trim(),age=+$("studentAge").value,standard=$("studentClass").value;if(!name||age<5||age>19||!standard){alert("Please enter a name, an age from 5 to 19, and your standard.");return}profile={name,age,standard,xp:0,answered:0};try{localStorage.setItem("kutties_profile",JSON.stringify(profile))}catch(e){}showHome()});
+$("backHome").addEventListener("click",showHome);$("nextQuestion").addEventListener("click",nextQuestion);$("quitQuiz").addEventListener("click",()=>openGame(gameIndex));$("retryQuiz").addEventListener("click",()=>startQuiz(deptIndex));$("backDepartments").addEventListener("click",()=>openGame(gameIndex));
+loadProfile();
+</script>
+</body>
+</html>
